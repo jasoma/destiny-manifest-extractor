@@ -1,8 +1,6 @@
-const DestinyApi = require('destiny-api-client');
+const request = require('request-promise');
 const download = require('./lib/download');
 const processDb = require('./lib/process-db');
-
-let destiny = new DestinyApi(process.env.API_KEY);
 
 let counts = {};
 
@@ -13,7 +11,10 @@ function processor(table, data) {
     counts[table]++;
 }
 
-destiny.manifest()
-    .then(m => download(m, {langs: ['en']}))
-    .then(r => processDb(r[0].dbfile, processor))
-    .then(() => console.log(counts));
+request({
+    url: 'https://www.bungie.net/Platform/Destiny/Manifest/',
+    json: true
+})
+.then(m => download(m.Response, {langs: ['en']}))
+.then(r => processDb(r[0].dbfile, processor))
+.then(() => console.log(counts));
