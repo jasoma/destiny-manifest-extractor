@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+</head>
+
+<body>
+
+    <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+    <label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+    <label for="nav-trigger" class="overlay"></label>
+
+    <nav>
+        <h2><a href="index.html">Home</a></h2>
+        <h3>Classes</h3>
+        <ul>
+            <li><a href="ManifestEntry.html">ManifestEntry</a>
+                <ul class='methods'>
+                    <li data-type='method'><a href="ManifestEntry.html#hashFieldPath">hashFieldPath</a></li>
+                </ul>
+            </li>
+        </ul>
+        <h3>Global</h3>
+        <ul>
+            <li><a href="global.html#download">download</a></li>
+            <li><a href="global.html#downloadDatabases">downloadDatabases</a></li>
+            <li><a href="global.html#extract">extract</a></li>
+            <li><a href="global.html#extractDb">extractDb</a></li>
+            <li><a href="global.html#fetch">fetch</a></li>
+            <li><a href="global.html#getManifest">getManifest</a></li>
+            <li><a href="global.html#processDb">processDb</a></li>
+            <li><a href="global.html#processTable">processTable</a></li>
+            <li><a href="global.html#rename">rename</a></li>
+        </ul>
+    </nav>
+
+    <div id="main">
+
+        <h1 class="page-title">index.js</h1>
+
+        <section>
+            <article>
+                <pre class="prettyprint source linenums"><code>const _ = require('lodash');
+
+const request = require('request-promise');
+const download = require('./lib/download');
+const processDb = require('./lib/process-db');
+
+const defaultOptions = {
+    langs: ['en', 'fr', 'es', 'de', 'it', 'ja', 'pt-br'],
+    path: './manifest-content'
+};
+
+/**
+ * Download the manifest description from the Destiny API or return it from provided options.
+ */
+function getManifest(manifest) {
+
+    if (manifest) {
+        // check if we were given the raw response or passed from a client like destiny-api-client
+        // which does Reponse unwrapping automatically.
+        if (_.has(manifest, 'Response')) {
+            manifest = manifest.Response;
+        }
+        return Promise.resolve(manifest);
+    }
+
+    // fetch it ourselves, don't need an api key for the manifest
+    return request({
+        url: 'https://www.bungie.net/Platform/Destiny/Manifest/',
+        json: true
+    })
+    .then(r => {
+        if (!r.Response) {
+            let error = new Error('Failed to load the manifest description: \n' + JSON.stringify(r, null, 2));
+            _.assign(error, r);
+            throw error;
+        }
+        return r.Response
+    });
+}
+
+/**
+ * Extract and process the destiny manifest.
+ *
+ * @param {ExtractOptions} options - options for the extract process.
+ * @param {object} [manifest] - an already downloaded manifest description from https://www.bungie.net/Platform/Destiny/Manifest/
+ *                              if not provided the manifest will be downloaded.
+ * @returns {Promise} - a promise for the extraction process.
+ * @see {@link https://www.bungie.net/Platform/Destiny/Manifest/|The manifest description}
+ * @see {@link https://www.bungie.net/platform/destiny/help/HelpDetail/GET?uri=Manifest%2f|Bungie API Docs for GetDestinyManifest}
+ * @see {@link http://bungienetplatform.wikia.com/wiki/GetDestinyManifest|Community Docs for GetDestinyManifest}
+ */
+function extract(options, manifest) {
+    if (!_.isFunction(options.processor)) {
+        throw new Error('No processor provided');
+    }
+    options = _.defaults(options, defaultOptions);
+    return getManifest(manifest)
+        .then(m => download(m, options))
+        .then(dbs => Promise.all(_.map(dbs, db => processDb(db, options.processor))));
+}
+
+module.exports = extract;
+
+/**
+ * @typedef {object} ExtractOptions
+ * @property {processor} processor - the processor to run against manifest content.
+ * @property {string[]} [options.langs=['en', 'fr', 'es', 'de', 'it', 'ja', 'pt-br']] - a list of languages to download content from the manifest for.
+ * @property {string} [options.path='./manifest-content'] - where to download the databases to.
+ */
+
+/**
+ * Handler for manifest data read from the sqlite database.
+ *
+ * @callback processor
+ * @param {string} lang - the language code of the content in the entry.
+ * @param {ManifestEntry} entry - a single entry from the manifest database.
+ */
+</code></pre>
+            </article>
+        </section>
+
+    </div>
+
+    <br class="clear">
+
+    <footer>
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 14 2017 11:38:43 GMT+0900 (JST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    </footer>
+
+    <script>
+        prettyPrint();
+    </script>
+    <script src="scripts/linenumber.js"></script>
+</body>
+
+</html>

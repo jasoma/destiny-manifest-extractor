@@ -4,7 +4,9 @@
   "description": "Utility for reading the Destiny API manifest",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "docs": "node_modules/.bin/jsdoc -c jsdoc.json",
+    "postdocs": "node pretty-docs.js"
   },
   "keywords": [
     "destiny"
@@ -17,5 +19,11 @@
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
     "sqlite3": "^3.1.8"
+  },
+  "devDependencies": {
+    "docdash": "^0.4.0",
+    "glob": "^7.1.1",
+    "js-beautify": "^1.6.9",
+    "jsdoc": "^3.4.3"
   }
 }
