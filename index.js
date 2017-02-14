@@ -1,3 +1,9 @@
+"use strict";
+
+/**
+ * @file Contains the main manifest extractor function.
+ */
+
 const _ = require('lodash');
 
 const request = require('request-promise');
@@ -11,6 +17,8 @@ const defaultOptions = {
 
 /**
  * Download the manifest description from the Destiny API or return it from provided options.
+ *
+ * @private
  */
 function getManifest(manifest) {
 
