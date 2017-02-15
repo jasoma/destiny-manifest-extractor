@@ -4,13 +4,15 @@ let plumbing = require('./plumbing');
 
 let treeTest = {
     langs: ['en'],
-    processor: tree('test-content/file-tree')
+    processor: tree('test-content/file-tree'),
+    apiKey: process.env.API_KEY
 };
 
 let plumbingProcessor = plumbing('test-content/plumbing');
 let plumbingTest = {
     langs: ['en'],
-    processor: plumbingProcessor.processor
+    processor: plumbingProcessor.processor,
+    apiKey: process.env.API_KEY
 };
 
 extract(treeTest)
