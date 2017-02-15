@@ -1,6 +1,7 @@
 # Project specific
 manifest-content
 test-content
+.envrc
 
 # Created by https://www.gitignore.io/api/OSX
 

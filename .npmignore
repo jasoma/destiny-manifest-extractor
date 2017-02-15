@@ -3,3 +3,4 @@ test-content
 test.js
 docs
 pretty-docs.js
+.envrc

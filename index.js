@@ -20,7 +20,7 @@ const defaultOptions = {
  *
  * @private
  */
-function getManifest(manifest) {
+function getManifest(manifest, apiKey) {
 
     if (manifest) {
         // check if we were given the raw response or passed from a client like destiny-api-client
@@ -34,7 +34,10 @@ function getManifest(manifest) {
     // fetch it ourselves, don't need an api key for the manifest
     return request({
         url: 'https://www.bungie.net/Platform/Destiny/Manifest/',
-        json: true
+        json: true,
+        headers: {
+            'x-api-key': apiKey
+        }
     })
     .then(r => {
         if (!r.Response) {
@@ -62,7 +65,7 @@ function extract(options, manifest) {
         throw new Error('No processor provided');
     }
     options = _.defaults(options, defaultOptions);
-    return getManifest(manifest)
+    return getManifest(manifest, options.apiKey)
         .then(m => download(m, options))
         .then(dbs => Promise.all(_.map(dbs, db => processDb(db, options.processor))));
 }
@@ -74,6 +77,7 @@ module.exports = extract;
  * @property {processor} processor - the processor to run against manifest content.
  * @property {string[]} [options.langs=['en', 'fr', 'es', 'de', 'it', 'ja', 'pt-br']] - a list of languages to download content from the manifest for.
  * @property {string} [options.path='./manifest-content'] - where to download the databases to.
+ * @property {string} [apiKey] - your applications api key for the bungie API, used if a manifest is not provided.
  */
 
 /**
