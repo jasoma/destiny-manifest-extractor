@@ -15,6 +15,8 @@ let saveJson = require('./lib/utils').saveJson;
 /**
  * Convert names to pascal case using the same conventions as the other lodash xCase
  * methods.
+ *
+ * @private
  */
 function pascalCase(name) {
     return _.upperFirst(_.camelCase(name));

@@ -1,6 +1,6 @@
 {
     "source": {
-        "include": ["index.js", "file-tree.js", "plumbing.js", "lib"]
+        "include": ["index.js", "file-tree.js", "plumbing.js", "lib/process-db.js"]
     },
     "opts": {
       "template": "./node_modules/docdash",
