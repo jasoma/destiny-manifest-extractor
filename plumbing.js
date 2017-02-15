@@ -37,7 +37,7 @@ module.exports = (rootPath) => {
     function getTable(lang, name) {
         if (tables[name]) return tables[name];
         let table = {
-            dir: `${rootPath}/${lang}`,
+            dir: `${rootPath}/${lang}/raw`,
             file: `${name}.json`,
             entries: {}
         };
