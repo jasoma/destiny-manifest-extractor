@@ -1,10 +1,11 @@
 let extract = require('.');
-let tree = require('./file-tree');
+let fileTree = require('./file-tree');
 let plumbing = require('./plumbing');
 
+let tree = fileTree('test-content/file-tree');
 let treeTest = {
     langs: ['en'],
-    processor: tree('test-content/file-tree'),
+    processor: tree.processor,
     apiKey: process.env.API_KEY
 };
 
@@ -16,6 +17,7 @@ let plumbingTest = {
 };
 
 extract(treeTest)
+    .then(() => tree.waitDone())
     .then(() => console.log('file-tree processor done'))
     .then(() => extract(plumbingTest))
     .then(() => plumbingProcessor.write())

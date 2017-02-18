@@ -54,13 +54,22 @@ file-tree/
 **Usage**
 
 ```js
-let fileTree = require('destiny-manifest-extractor/file-tree')('root/directory/path');
+let fileTree = require('destiny-manifest-extractor/file-tree');
+let tree = fileTree('root/directory/path');
 extract({
     langs: ['en'],
     apiKey: 'your-api-key',
-    processor: fileTree
+    processor: tree.processor
 })
+.then(() => tree.waitDone())
 .then(() => console.log('done'));
+```
+
+The destiny manifest contains ~25,000 entries per language. The file tree processor by default limits itself to a maximum of 100 active writes at a time to avoid running out of file descriptors. This limit can be changed by passing a second argument when creating the processor:
+
+```js
+let fileTree = require('destiny-manifest-extractor/file-tree');
+let tree = fileTree('root/directory/path', 1000);
 ```
 
 ### [plumbing](./plumbing.js)
