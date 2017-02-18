@@ -40,7 +40,7 @@ Two processors come with the extract package as examples or to be used as is.
 
 ### [file-tree](./file-tree.js)
 
-Converts each manfest entry into a json file and saves them to a file tree based on the language and table name:
+Converts each manfest entry into a json file and saves them to a file tree based on the language, table name, and primary hash/key of the entry:
 
 ```
 file-tree/
