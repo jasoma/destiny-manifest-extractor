@@ -64,7 +64,7 @@ module.exports = function(rootPath, writeLimit) {
             .then(() => {
                 let next = queue.shift();
                 if (next) {
-                    return doWrite(data);
+                    return doWrite(next);
                 }
                 else {
                     writes--;
