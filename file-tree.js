@@ -11,6 +11,7 @@ let mkdirp = require('./lib/utils').mkdirp;
 
 /**
  * Save a manifest entry to a file.
+ * @private
  */
 function saveJson(path, entry) {
     return new Promise((resolve, reject) => {
