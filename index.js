@@ -62,7 +62,7 @@ function getManifest(manifest, apiKey) {
  */
 function extract(options, manifest) {
     if (!_.isFunction(options.processor)) {
-        throw new Error('No processor provided');
+        return Promise.reject(new Error('No processor provided'));
     }
     options = _.defaults(options, defaultOptions);
     return getManifest(manifest, options.apiKey)
